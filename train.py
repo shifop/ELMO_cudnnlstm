@@ -42,7 +42,7 @@ def main(argv):
 if __name__=='__main__':
     flags.DEFINE_integer("embedding_size", default=300,
                          help="词向量维度")
-    flags.DEFINE_integer("seq_length", default=202,
+    flags.DEFINE_integer("seq_length", default=256,
                          help="文本长度")
     flags.DEFINE_integer("vocab_size", default=3374,
                          help="词库大小")
