@@ -1,5 +1,6 @@
 from EMLO import emlo
 from absl import flags, app
+import os
 
 class Config(object):
 
@@ -40,11 +41,12 @@ def main(argv):
 
 
 if __name__=='__main__':
+    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
     flags.DEFINE_integer("embedding_size", default=300,
                          help="词向量维度")
-    flags.DEFINE_integer("seq_length", default=256,
+    flags.DEFINE_integer("seq_length", default=128,
                          help="文本长度")
-    flags.DEFINE_integer("vocab_size", default=3374,
+    flags.DEFINE_integer("vocab_size", default=9391,
                          help="词库大小")
     flags.DEFINE_integer("layers", default=2,
                          help="lstm层数")
@@ -60,15 +62,15 @@ if __name__=='__main__':
                        help="是否使用穿孔连接")
     flags.DEFINE_float("learning_rate", default=1e-3,
                        help="学习率")
-    flags.DEFINE_integer("batch_size", default=64,
+    flags.DEFINE_integer("batch_size", default=128,
                          help="每批次包含的文本数")
     flags.DEFINE_integer("num_epochs", default=100,
                          help="训练多少代")
     flags.DEFINE_integer("print_per_batch", default=1000,
                          help="每多少步输出一次信息")
-    flags.DEFINE_string("train_data_path", default="./data/process/default/train_data.record",
+    flags.DEFINE_string("train_data_path", default="./data/process/train_test.record",
                         help="训练数据地址")
-    flags.DEFINE_string("load_path", default="./model/default_1/model.ckpt",
+    flags.DEFINE_string("load_path", default=None,
                         help="加载模型地址")
     flags.DEFINE_string("save_path", default="./model/default/model.ckpt",
                         help="模型保存地址")
@@ -76,7 +78,7 @@ if __name__=='__main__':
                         help="日志保存地址")
     flags.DEFINE_integer("num_sampled", default=4096,
                          help="采样数量")
-    flags.DEFINE_integer("max_step", default=240000,
+    flags.DEFINE_integer("max_step", default=6250000,
                          help="最大训练次数")
     flags.DEFINE_integer("warm_up", default=10000,
                          help="")

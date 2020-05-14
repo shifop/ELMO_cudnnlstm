@@ -7,13 +7,14 @@ import tensorflow as tf
 import time
 import os
 import logging
+from tqdm import tqdm
 
 logging.basicConfig(level=logging.INFO)
 
 
 def get_data_count(path):
     c = 0
-    for record in tf.python_io.tf_record_iterator(path):
+    for record in tqdm(tf.python_io.tf_record_iterator(path)):
         c += 1
     return c
 
@@ -255,6 +256,9 @@ class emlo(object):
 
             self.merged = tf.summary.merge_all()
 
+            for index, x in enumerate(tf.trainable_variables()):
+                logging.info('%d:%s' % (index, x))
+
     def train(self, load_path, save_path, log_path):
         log_writer = tf.summary.FileWriter(log_path, self.graph)
         start_time = time.time()
@@ -267,7 +271,8 @@ class emlo(object):
         save_per_batch = self.config.print_per_batch
 
         # 获取数据量
-        data_count = get_data_count(self.config.train_data_path)
+        # data_count = get_data_count(self.config.train_data_path)
+        data_count = 80500000
         with tf.Session(graph=self.graph, config=tf.ConfigProto(allow_soft_placement=True,
                                                                 gpu_options=tf.GPUOptions(allow_growth=True))) as sess:
 
@@ -276,6 +281,7 @@ class emlo(object):
                 self.saver.restore(sess, load_path)
 
             for epoch in range(self.config.num_epochs):
+                logging.info('epoch:%d'%(epoch))
                 if not flag:
                     return
                 sess.run(self.train_data_op)
